@@ -60,25 +60,7 @@ server.post("/user", (req, res) => {
   });
 });
 
-//PATCH new data on existing user (edit)
-server.patch("/user/:id", (req, res) => {
-  const { id } = req.params;
-  const query = `UPDATE users SET ? WHERE id = ${id}`;
-  console.log(req.body);
-  connection.query(query, req.body, (err) => {
-    if (err) throw err;
-    res.send("User changed!");
-  });
-});
-
-//DELETE user by id
-server.delete("/user/:id", (req, res) => {
-  const query = `DELETE FROM users WHERE id = ${id}`;
-  connection.query(query, (err) => {
-    if (err) throw err;
-    res.send("User deleted!");
-  });
-});
+rigi;
 
 //Launch local server
 server.listen(PORT, (err) => {

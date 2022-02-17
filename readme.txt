@@ -1,1 +1,0 @@
-API básica con Node y Express. Devuelve endpoints para los métodos GET, POST, PUT y DELETE. Se puede probar con Postman. Recomendado como primera clase sobre creación de API Rest.
