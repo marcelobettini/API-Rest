@@ -38,7 +38,7 @@ server.get("/user/:id", (req, res) => {
     if (data.length) {
       res.json(data); //devuelve res.status(200)
     } else {
-      res.status(404).send(`No user with id ${id}`); //devuelve res.status(404)
+      res.status(404).end(`No user with id ${id}`); //devuelve res.status(404)
     }
   });
 });
@@ -60,7 +60,25 @@ server.post("/user", (req, res) => {
   });
 });
 
-rigi;
+//PATCH new data on existing user (edit)
+server.patch("/user/:id", (req, res) => {
+  const { id } = req.params;
+  const query = `UPDATE users SET ? WHERE id = ${id}`;
+  console.log(req.body);
+  connection.query(query, req.body, (err) => {
+    if (err) throw err;
+    res.send("User changed!");
+  });
+});
+
+//DELETE user by id
+server.delete("/user/:id", (req, res) => {
+  const query = `DELETE FROM users WHERE id = ${id}`;
+  connection.query(query, (err) => {
+    if (err) throw err;
+    res.send("User deleted!");
+  });
+});
 
 //Launch local server
 server.listen(PORT, (err) => {
