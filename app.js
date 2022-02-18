@@ -22,9 +22,9 @@ server.get("/user", (req, res) => {
       throw err;
     }
     if (data.length) {
-      res.json(data); //devuelve res.status(200)
+      res.status(200).json(data);
     } else {
-      res.send("Nothing here 😞"); //devuelve res.status(404)
+      res.status(404).end("Nothing here 😞");
     }
   });
 });
@@ -56,7 +56,7 @@ server.post("/user", (req, res) => {
   // connection.query(query, newRecord, (err) => {
   connection.query(query, (err) => {
     if (err) throw err;
-    res.send("User created!");
+    res.status(201).end("User created!");
   });
 });
 
@@ -67,7 +67,7 @@ server.patch("/user/:id", (req, res) => {
   console.log(req.body);
   connection.query(query, req.body, (err) => {
     if (err) throw err;
-    res.send("User changed!");
+    res.status(200).end("User changed!");
   });
 });
 
@@ -76,7 +76,7 @@ server.delete("/user/:id", (req, res) => {
   const query = `DELETE FROM users WHERE id = ${id}`;
   connection.query(query, (err) => {
     if (err) throw err;
-    res.send("User deleted!");
+    res.status(200).end("User deleted!"); //code 204 also would be fine
   });
 });
 
