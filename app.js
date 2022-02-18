@@ -1,5 +1,6 @@
 const { urlencoded } = require("express");
 const express = require("express");
+const { append } = require("express/lib/response");
 const { connect } = require("./db");
 const connection = require("./db");
 const PORT = process.env.PORT || 3000;
@@ -30,17 +31,23 @@ server.get("/user", (req, res) => {
 });
 
 //GET user by id
-server.get("/user/:id", (req, res) => {
-  const { id } = req.params;
-  const query = `SELECT * FROM users WHERE id = ${id}`;
-  connection.query(query, (err, data) => {
-    if (err) throw err;
-    if (data.length) {
-      res.json(data); //devuelve res.status(200)
-    } else {
-      res.status(404).end(`No user with id ${id}`); //devuelve res.status(404)
-    }
-  });
+server.get("/user/:id", (req, res, next) => {
+  let { id } = req.params;
+  id = Number(id);
+  if (!isNaN(id)) {
+    const query = `SELECT * FROM users WHERE id = ${id}`;
+    connection.query(query, (err, data) => {
+      if (err) throw err;
+
+      if (data.length) {
+        res.json(data); //devuelve res.status(200)
+      } else {
+        res.status(404).end(`No user with id ${id}`); //devuelve res.status(404)
+      }
+    });
+  } else {
+    next();
+  }
 });
 
 //POST new user (create)
@@ -78,6 +85,11 @@ server.delete("/user/:id", (req, res) => {
     if (err) throw err;
     res.status(200).end("User deleted!"); //code 204 also would be fine
   });
+});
+
+//404
+server.use((req, res) => {
+  res.status(404).end("Resource Not Found");
 });
 
 //Launch local server
