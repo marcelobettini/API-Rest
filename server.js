@@ -51,18 +51,28 @@ server.get("/user/:id", (req, res, next) => {
 //POST new user (create)
 server.post("/user", (req, res) => {
   const { name, userName, email } = req.body;
-  // const query = "INSERT INTO users SET ?";//with object
-  const query = `INSERT INTO users (name, userName, email) VALUES('${name}', '${userName}', '${email}')`; //in line
-  // const newRecord = {
-  //   name,
-  //   userName,
-  //   email,
-  // };
-  // connection.query(query, newRecord, (err) => {
-  connection.query(query, (err) => {
-    if (err) throw err;
-    res.status(201).send("User created!");
-  });
+  if (
+    !name ||
+    !userName ||
+    (!email && name === "") ||
+    userName === "" ||
+    email === ""
+  ) {
+    res.status(400).send("name, userName and email required");
+  } else {
+    // const query = "INSERT INTO users SET ?";//with object
+    const query = `INSERT INTO users (name, userName, email) VALUES('${name}', '${userName}', '${email}')`; //in line
+    // const newRecord = {
+    //   name,
+    //   userName,
+    //   email,
+    // };
+    // connection.query(query, newRecord, (err) => {
+    connection.query(query, (err) => {
+      if (err) throw err;
+      res.status(201).send("User created!");
+    });
+  }
 });
 
 //PATCH new data on existing user (edit)
