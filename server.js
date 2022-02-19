@@ -23,7 +23,7 @@ server.get("/user", (req, res) => {
     if (data.length) {
       res.status(200).json(data);
     } else {
-      res.status(404).end("Nothing here 😞");
+      res.status(404).send("Nothing here 😞");
     }
   });
 });
@@ -40,7 +40,7 @@ server.get("/user/:id", (req, res, next) => {
       if (data.length) {
         res.json(data); //devuelve res.status(200)
       } else {
-        res.status(404).end(`No user with id ${id}`); //devuelve res.status(404)
+        res.status(404).send(`No user with id ${id}`); //devuelve res.status(404)
       }
     });
   } else {
@@ -61,7 +61,7 @@ server.post("/user", (req, res) => {
   // connection.query(query, newRecord, (err) => {
   connection.query(query, (err) => {
     if (err) throw err;
-    res.status(201).end("User created!");
+    res.status(201).send("User created!");
   });
 });
 
@@ -72,22 +72,27 @@ server.patch("/user/:id", (req, res) => {
   console.log(req.body);
   connection.query(query, req.body, (err) => {
     if (err) throw err;
-    res.status(200).end("User changed!");
+    res.status(200).send("User changed!");
   });
 });
 
 //DELETE user by id
 server.delete("/user/:id", (req, res) => {
+  const { id } = req.params;
   const query = `DELETE FROM users WHERE id = ${id}`;
-  connection.query(query, (err) => {
+  connection.query(query, (err, rows) => {
     if (err) throw err;
-    res.status(200).end("User deleted!"); //code 204 also would be fine
+    if (rows.affectedRows === 0) {
+      res.status(404).send(`No user with id ${id}`);
+    } else {
+      res.status(200).send("User deleted!"); //code 204 also would be fine
+    }
   });
 });
 
 //404
 server.use((req, res) => {
-  res.status(404).end("Resource Not Found");
+  res.status(404).send("Resource Not Found");
 });
 
 //Launch local server
