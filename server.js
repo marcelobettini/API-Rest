@@ -1,7 +1,5 @@
 const { urlencoded } = require("express");
 const express = require("express");
-const { append } = require("express/lib/response");
-const { connect } = require("./db");
 const connection = require("./db");
 const PORT = process.env.PORT || 3000;
 //check connection
