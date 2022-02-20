@@ -1,6 +1,21 @@
 const { urlencoded } = require("express");
 const express = require("express");
 const connection = require("./db");
+const { body, validationResult } = require("express-validator");
+const validate = [
+  body("name")
+    .exists()
+    .withMessage("Must provide a name")
+    .isLength({ min: 2 })
+    .withMessage("Name min length is 2 characters"),
+  body("userName").exists().withMessage("Must provide a user name"),
+  body("email", "Must enter a valid email")
+    .exists()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Must be a valid email"),
+];
+
 const PORT = process.env.PORT || 3000;
 //check connection
 connection.connect((err) => {
@@ -49,26 +64,19 @@ server.get("/user/:id", (req, res, next) => {
 });
 
 //POST new user (create)
-server.post("/user", (req, res) => {
-  const { name, userName, email } = req.body;
-  if (
-    !name ||
-    !userName ||
-    (!email && name === "") ||
-    userName === "" ||
-    email === ""
-  ) {
-    res.status(400).send("name, userName and email required");
+server.post("/user", validate, (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400).send({ errors: errors.array() });
   } else {
-    // const query = "INSERT INTO users SET ?";//with object
-    const query = `INSERT INTO users (name, userName, email) VALUES('${name}', '${userName}', '${email}')`; //in line
-    // const newRecord = {
-    //   name,
-    //   userName,
-    //   email,
-    // };
-    // connection.query(query, newRecord, (err) => {
-    connection.query(query, (err) => {
+    const { name, userName, email } = req.body;
+    const newRecord = {
+      name,
+      userName,
+      email,
+    };
+    const query = "INSERT INTO users SET ?";
+    connection.query(query, newRecord, (err) => {
       if (err) throw err;
       res.status(201).send("User created!");
     });
