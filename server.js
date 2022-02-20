@@ -1,7 +1,11 @@
+// CORS: https://developer.mozilla.org/es/docs/Web/HTTP/CORS
+//npm i cors (dependencia de producción, no Dev, ojo)
+
 const { urlencoded } = require("express");
 const express = require("express");
 const connection = require("./db");
 const { body, validationResult } = require("express-validator");
+const cors = require("cors");
 const validatePatch = [
   body("name", "Name min length is 2 characters")
     .optional()
@@ -29,11 +33,12 @@ const PORT = process.env.PORT || 3000;
 //check connection
 connection.connect((err) => {
   err
-    ? console.log(`Err code: ${err.errno} | Err Type: ${err.message}`)
+    ? console.error(`Err code: ${err.errno} | Err Type: ${err.message}`)
     : console.log("Connection established...");
 });
 
 const server = express();
+server.use(cors());
 server.use(express.json());
 server.use(urlencoded({ extended: true }));
 
