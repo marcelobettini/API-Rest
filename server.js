@@ -2,6 +2,15 @@ const { urlencoded } = require("express");
 const express = require("express");
 const connection = require("./db");
 const { body, validationResult } = require("express-validator");
+const validatePatch = [
+  body("name", "Name min length is 2 characters")
+    .optional()
+    .isLength({ min: 2 }),
+  body("userName", "User name min length is 2 characters")
+    .optional()
+    .isLength({ min: 2 }),
+  body("email", "Must be a valid email").optional().isEmail(),
+];
 const validate = [
   body("name")
     .exists()
@@ -9,7 +18,7 @@ const validate = [
     .isLength({ min: 2 })
     .withMessage("Name min length is 2 characters"),
   body("userName").exists().withMessage("Must provide a user name"),
-  body("email", "Must enter a valid email")
+  body("email")
     .exists()
     .withMessage("Email is required")
     .isEmail()
@@ -84,14 +93,23 @@ server.post("/user", validate, (req, res) => {
 });
 
 //PATCH new data on existing user (edit)
-server.patch("/user/:id", (req, res) => {
-  const { id } = req.params;
-  const query = `UPDATE users SET ? WHERE id = ${id}`;
-  console.log(req.body);
-  connection.query(query, req.body, (err) => {
-    if (err) throw err;
-    res.status(200).send("User changed!");
-  });
+server.patch("/user/:id", validatePatch, (req, res) => {
+  const errors = validationResult(req);
+  // if (req.body.constructor === Object && Object.keys(req.body).length === 0)
+  //if no keys, returns empty arr
+  if (!Object.keys(req.body).length) {
+    res.status(400).send("No incluyó ningún campo para modificar");
+  } else if (!errors.isEmpty()) {
+    res.status(400).send({ errors: errors.array() });
+  } else {
+    const { id } = req.params;
+    const query = `UPDATE users SET ? WHERE id = ${id}`;
+    console.log(req.body);
+    connection.query(query, req.body, (err) => {
+      if (err) throw err;
+      res.status(200).send("User changed!");
+    });
+  }
 });
 
 //DELETE user by id
