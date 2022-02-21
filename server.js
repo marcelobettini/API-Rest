@@ -67,9 +67,9 @@ server.get("/user/:id", (req, res, next) => {
       if (err) throw err;
 
       if (data.length) {
-        res.json(data); //devuelve res.status(200)
+        res.send(data); //devuelve res.status(200)
       } else {
-        res.status(404).send(`No user with id ${id}`); //devuelve res.status(404)
+        res.status(404).json(`No user with id ${id}`); //devuelve res.status(404) y mensaje en consola del browser (check with send first... then send with json format { error: `No user with id ${id}` })
       }
     });
   } else {
