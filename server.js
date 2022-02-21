@@ -60,7 +60,7 @@ server.get("/user", (req, res) => {
 //GET user by id
 server.get("/user/:id", (req, res, next) => {
   let { id } = req.params;
-  id = Number(id);
+  // id = parseInt(id, 10); //Number(id) check with 2e1, 0xf...(20, 15)
   if (!isNaN(id)) {
     const query = `SELECT * FROM users WHERE id = ${id}`;
     connection.query(query, (err, data) => {
