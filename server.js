@@ -31,7 +31,6 @@ server.get("/user", (req, res) => {
 //GET user by id
 server.get("/user/:id", (req, res, next) => {
   let { id } = req.params;
-  id = Number(id);
   if (!isNaN(id)) {
     const query = `SELECT * FROM users WHERE id = ${id}`;
     connection.query(query, (err, data) => {
