@@ -1,17 +1,46 @@
+// CORS: https://developer.mozilla.org/es/docs/Web/HTTP/CORS
+//npm i cors (dependencia de producción, no Dev, ojo)
+
 const { urlencoded } = require("express");
 const express = require("express")
 const connection = require("./db");
+const { body, validationResult } = require("express-validator");
+const cors = require("cors");
+const validatePatch = [
+    body("name", "Name min length is 2 characters")
+    .optional()
+    .isLength({ min: 2 }),
+    body("userName", "User name min length is 2 characters")
+    .optional()
+    .isLength({ min: 2 }),
+    body("email", "Must be a valid email").optional().isEmail(),
+];
+const validate = [
+    body("name")
+    .exists()
+    .withMessage("Must provide a name")
+    .isLength({ min: 2 })
+    .withMessage("Name min length is 2 characters"),
+    body("userName").exists().withMessage("Must provide a user name"),
+    body("email")
+    .exists()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Must be a valid email"),
+];
+
 const PORT = process.env.PORT || 3000;
 const users = require("./data")
     //check connection
 connection.connect((err) => {
     err
         ?
-        console.log(`Err code: ${err.errno} | Err Type: ${err.message}`) :
+        console.error(`Err code: ${err.errno} | Err Type: ${err.message}`) :
         console.log("Connection established...");
 });
 
 const server = express();
+server.use(cors());
 server.use(express.json());
 server.use(urlencoded({ extended: true }));
 
@@ -33,15 +62,16 @@ server.get("/user", (req, res) => {
 //GET user by id
 server.get("/user/:id", (req, res, next) => {
     let { id } = req.params;
+    // id = parseInt(id, 10); //Number(id) check with 2e1, 0xf...(20, 15)
     if (!isNaN(id)) {
         const query = `SELECT * FROM users WHERE id = ${id}`;
         connection.query(query, (err, data) => {
             if (err) throw err;
 
             if (data.length) {
-                res.json(data); //devuelve res.status(200)
+                res.send(data); //devuelve res.status(200)
             } else {
-                res.status(404).send(`No user with id ${id}`); //devuelve res.status(404)
+                res.status(404).json(`No user with id ${id}`); //devuelve res.status(404) y mensaje en consola del browser (check with send first... then send with json format { error: `No user with id ${id}` })
             }
         });
     } else {
@@ -50,25 +80,19 @@ server.get("/user/:id", (req, res, next) => {
 });
 
 //POST new user (create)
-server.post("/user", (req, res) => {
-    const { name, userName, email } = req.body;
-    if (!name ||
-        !userName ||
-        (!email && name === "") ||
-        userName === "" ||
-        email === ""
-    ) {
-        res.status(400).send("name, userName and email required");
+server.post("/user", validate, (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(400).send({ errors: errors.array() });
     } else {
-        // const query = "INSERT INTO users SET ?";//with object
-        const query = `INSERT INTO users (name, userName, email) VALUES('${name}', '${userName}', '${email}')`; //in line
-        // const newRecord = {
-        //   name,
-        //   userName,
-        //   email,
-        // };
-        // connection.query(query, newRecord, (err) => {
-        connection.query(query, (err) => {
+        const { name, userName, email } = req.body;
+        const newRecord = {
+            name,
+            userName,
+            email,
+        };
+        const query = "INSERT INTO users SET ?";
+        connection.query(query, newRecord, (err) => {
             if (err) throw err;
             res.status(201).send("User created!");
         });
@@ -76,14 +100,23 @@ server.post("/user", (req, res) => {
 });
 
 //PATCH new data on existing user (edit)
-server.patch("/user/:id", (req, res) => {
-    const { id } = req.params;
-    const query = `UPDATE users SET ? WHERE id = ${id}`;
-    console.log(req.body);
-    connection.query(query, req.body, (err) => {
-        if (err) throw err;
-        res.status(200).send("User changed!");
-    });
+server.patch("/user/:id", validatePatch, (req, res) => {
+    const errors = validationResult(req);
+    // if (req.body.constructor === Object && Object.keys(req.body).length === 0)
+    //if no keys, returns empty arr
+    if (!Object.keys(req.body).length) {
+        res.status(400).send("No incluyó ningún campo para modificar");
+    } else if (!errors.isEmpty()) {
+        res.status(400).send({ errors: errors.array() });
+    } else {
+        const { id } = req.params;
+        const query = `UPDATE users SET ? WHERE id = ${id}`;
+        console.log(req.body);
+        connection.query(query, req.body, (err) => {
+            if (err) throw err;
+            res.status(200).send("User changed!");
+        });
+    }
 });
 
 //DELETE user by id
