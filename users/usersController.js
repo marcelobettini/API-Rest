@@ -9,7 +9,7 @@ const listAll = async(req, res, next) => {
 
 const listOne = async(req, res, next) => {
     if (isNaN(+req.params.id)) {
-        return res.status(400).json({ message: "Debe ingresar un número" })
+        return res.status(400).json({ message: "ID must be a positive integer" })
     }
     const dbResponse = await getUserById(+req.params.id);
     if (dbResponse.hasOwnProperty("error")) return res.status(500).json(dbResponse)
@@ -28,7 +28,7 @@ const addOne = async(req, res) => {
 
 const editOne = async(req, res, next) => {
     if (isNaN(+req.params.id)) {
-        return res.status(400).json({ message: "Debe ingresar un número" })
+        return res.status(400).json({ message: "ID must be a positive integer" })
     }
     const bodyClean = matchedData(req)
     const dbResponse = await editUserById(+req.params.id, bodyClean)
@@ -38,7 +38,7 @@ const editOne = async(req, res, next) => {
 
 const deleteOne = async(req, res, next) => {
     if (isNaN(+req.params.id)) {
-        return res.status(400).json({ message: "Debe ingresar un número" })
+        return res.status(400).json({ message: "ID must be a positive integer" })
     }
     const dbResponse = await deleteUserById(+req.params.id)
     if (dbResponse.hasOwnProperty("error")) return res.status(500).json(dbResponse)

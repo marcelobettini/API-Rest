@@ -15,7 +15,7 @@ const validatorCreateUser = [
     .notEmpty()
     .isEmail(),
     (req, res, next) => {
-        return validateResults(req, res, next)
+        return validateResults(req, res, next) //en utils/handleValidator... could be here, though
     }
 ]
 
