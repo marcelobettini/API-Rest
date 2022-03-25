@@ -6,7 +6,9 @@ const getAllUsers = async() => {
     try {
         return await connection.query(query)
     } catch (error) {
-        return { "error": error.code }
+        error.status = 500
+        error.message = error.code
+        return error
     }
 }
 
@@ -15,7 +17,9 @@ const getUserById = async(id) => {
     try {
         return await connection.query(query)
     } catch (error) {
-        return { "error": error.code }
+        error.status = 500
+        error.message = error.code
+        return error
     }
 }
 
@@ -24,7 +28,9 @@ const addNewUser = async(user) => {
     try {
         return await connection.query(query, user)
     } catch (error) {
-        return { "error": error.code }
+        error.status = 500
+        error.message = error.code
+        return error
     }
 }
 
@@ -33,7 +39,9 @@ const editUserById = async(id, user) => {
     try {
         return await connection.query(query, user)
     } catch (error) {
-        return { "error": error.code }
+        error.status = 500
+        error.message = error.code
+        return error
     }
 }
 
@@ -43,8 +51,9 @@ const deleteUserById = async(id) => {
         return await connection.query(query)
 
     } catch (error) {
-        return { "error": error.code }
-
+        error.status = 500
+        error.message = error.code
+        return error
     }
 }
 

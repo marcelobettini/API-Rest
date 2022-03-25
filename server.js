@@ -44,15 +44,23 @@ server.use("/users", require("./users/usersRoute"))
 
 
 
-//404
-server.use((req, res) => {
-    res.status(404).json({ message: "Resource not found" });
+//Catch all
+server.use((req, res, next) => {
+    let err = new Error("Resource not found");
+    err.status = 404;
+    next(err);
+});
+
+//Error handler
+server.use((error, req, res, next) => {
+    res.status(error.status || 500)
+    res.json({ status: error.status, message: error.message });
 });
 
 //Launch local server
 server.listen(PORT, (err) => {
     err
         ?
-        console.log("Ocurrió un error, we are Kaput") :
+        console.warn("Falla de inicio", { Error: err }) :
         console.log(`Server running on port ${PORT}`);
 });

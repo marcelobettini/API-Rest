@@ -1,5 +1,4 @@
-const { check } = require("express-validator");
-const validateResults = require("../utils/handleValidator")
+const { check, validationResult } = require("express-validator");
 
 const validatorCreateUser = [
     check("name")
@@ -15,8 +14,12 @@ const validatorCreateUser = [
     .notEmpty()
     .isEmail(),
     (req, res, next) => {
-        return validateResults(req, res, next) //en utils/handleValidator... could be here, though
+        try {
+            validationResult(req).throw()
+            return next() //si pasa validaciones, sigue hacia el controlador
+        } catch (err) {
+            res.status(400).send({ errors: err.array() })
+        }
     }
 ]
-
 module.exports = { validatorCreateUser }
