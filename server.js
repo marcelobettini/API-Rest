@@ -38,8 +38,11 @@ server.use(cors());
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 
-//Users Routing
+//Routing...
+//Users 
 server.use("/users", require("./users/usersRoute"))
+    //Posts
+server.use("/posts", require("./posts/postsRoute"))
 
 
 
