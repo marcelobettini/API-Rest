@@ -12,5 +12,20 @@ const getAllPosts = async() => {
     }
 }
 
+const getPostsWith = async(string) => {
+    const query = `SELECT * FROM posts WHERE title LIKE '%${string}%'`
+    try {
+        return await connection.query(query)
+    } catch (error) {
+        error.status = 500
+        error.message = error.code
+        return error
+    }
+}
 
-module.exports = { getAllPosts }
+const addNewPost = async(post) => {
+    console.log(post)
+}
+
+
+module.exports = { getAllPosts, getPostsWith, addNewPost }
