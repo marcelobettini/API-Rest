@@ -1,5 +1,6 @@
 const router = require("express").Router()
 const { validatorCreatePost } = require("../validators/posts")
+const { verifyToken } = require("../utils/handleToken")
 
 const { listAll, addOne } = require("./postsController")
 router.get("/", listAll)
@@ -8,7 +9,7 @@ router.get("/", listAll)
     A new parameter is always marked by the question mark. We can also pass multiple params in the URL. It is important that we separate them with an & sign. But we do not need another ?.
     in address bar: /user?name=marcelobettini&mail=marce@sarasa.com&age=102&... etc key+value*/
 
-router.post("/", validatorCreatePost, addOne)
+router.post("/", verifyToken, validatorCreatePost, addOne)
 
 
 module.exports = router

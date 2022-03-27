@@ -1,10 +1,10 @@
-const connection = require("../db/config")
+const pool = require("../db/config")
 
 
 const getAllUsers = async() => {
     const query = "SELECT * FROM users"
     try {
-        return await connection.query(query)
+        return await pool.query(query)
     } catch (error) {
         error.status = 500
         error.message = error.code
@@ -15,7 +15,7 @@ const getAllUsers = async() => {
 const getUserById = async(id) => {
     const query = `SELECT * FROM users WHERE id = ${id}`
     try {
-        return await connection.query(query)
+        return await pool.query(query)
     } catch (error) {
         error.status = 500
         error.message = error.code
@@ -26,7 +26,7 @@ const getUserById = async(id) => {
 const addNewUser = async(user) => {
     const query = "INSERT INTO users SET ?";
     try {
-        return await connection.query(query, user)
+        return await pool.query(query, user)
     } catch (error) {
         error.status = 500
         error.message = error.code
@@ -37,7 +37,7 @@ const addNewUser = async(user) => {
 const editUserById = async(id, user) => {
     const query = `UPDATE users SET ? WHERE id = ${id}`
     try {
-        return await connection.query(query, user)
+        return await pool.query(query, user)
     } catch (error) {
         error.status = 500
         error.message = error.code
@@ -48,7 +48,7 @@ const editUserById = async(id, user) => {
 const deleteUserById = async(id) => {
     const query = `DELETE FROM users WHERE id = ${id}`
     try {
-        return await connection.query(query)
+        return await pool.query(query)
 
     } catch (error) {
         error.status = 500
@@ -57,6 +57,16 @@ const deleteUserById = async(id) => {
     }
 }
 
+const loginUser = async(email, password) => {
+    const query = `SELECT * FROM users WHERE email = '${email}' LIMIT 1`
+    try {
+        return await pool.query(query)
+    } catch (error) {
+        error.status = 500
+        error.message = error.code
+        return error
+    }
 
+}
 
-module.exports = { getAllUsers, getUserById, addNewUser, editUserById, deleteUserById }
+module.exports = { getAllUsers, getUserById, addNewUser, editUserById, deleteUserById, loginUser }

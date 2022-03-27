@@ -1,5 +1,6 @@
 const { getAllPosts, getPostsWith, addNewPost } = require("./postsModel")
 const { matchedData } = require("express-validator")
+const jwt = require("jsonwebtoken")
 
 
 // https://www.samanthaming.com/tidbits/94-how-to-check-if-object-is-empty/
@@ -18,11 +19,28 @@ const listAll = async(req, res, next) => {
 
 const addOne = async(req, res, next) => {
     const bodyClean = matchedData(req)
-    const dbResponse = await addNewPost(bodyClean)
 
-    // dbResponse instanceof Error ? next(dbResponse) : res.status(201).json(bodyClean)
-    /*dada la naturaleza de la respuesta (OKPacket) no obtendremos 404. Si "rompemos" la tabla dará error en el catch y si
-    los datos son duplicados, también saldrá por el catch... dbResponse en este caso será un objeto en vez de array, existirá y tendrá length*/
+    jwt.verify(req.token, 'privateKey@123', async(error, authData) => {
+        if (error) {
+            res.status(400).json({ message: "Forbidden access | No Valid Token" })
+        } else {
+            console.log(bodyClean)
+                // const newPost = {
+                //     userid: authData.user[0].id,
+                //     title: req.body.title,
+                //     body: req.body.body
+                // }
+
+
+            const dbResponse = await addNewPost({
+                userid: authData.user[0].id,
+                ...bodyClean
+            })
+            dbResponse instanceof Error ? next(dbResponse) : res.status(201).json({ message: "Post created!", authData })
+
+        }
+    })
+
 }
 
 module.exports = { listAll, addOne }

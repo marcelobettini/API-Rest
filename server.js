@@ -41,7 +41,8 @@ server.use(express.urlencoded({ extended: true }));
 //Routing...
 //Users 
 server.use("/users", require("./users/usersRoute"))
-    //Posts
+
+//Posts
 server.use("/posts", require("./posts/postsRoute"))
 
 

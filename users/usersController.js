@@ -1,7 +1,7 @@
-const { getAllUsers, getUserById, addNewUser, editUserById, deleteUserById } = require("./usersModel")
-const bcrypt = require("bcrypt")
-const saltRounds = 10
-const { matchedData } = require("express-validator")
+const { getAllUsers, getUserById, addNewUser, editUserById, deleteUserById, loginUser } = require("./usersModel")
+const { hashPassword, checkPassword } = require("../utils/handlePassword")
+const { matchedData } = require("express-validator");
+const jwt = require("jsonwebtoken");
 
 const listAll = async(req, res, next) => {
     const dbResponse = await getAllUsers()
@@ -21,22 +21,15 @@ const listOne = async(req, res, next) => {
 };
 
 const addOne = async(req, res, next) => {
-    const { name, email, password } = req.body
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const password = await hashPassword(req.body.password)
 
     console.log(req.body) //show this...
     const bodyClean = matchedData(req) //....this
     console.log(bodyClean) //...and this
 
-    const newUser = {
-        name,
-        email,
-        password: hashedPassword
-    }
-    const dbResponse = await addNewUser(newUser)
+    const dbResponse = await addNewUser({...bodyClean, password })
     dbResponse instanceof Error ? next(dbResponse) : res.status(201).json({ message: "User created!" })
-        /*dada la naturaleza de la respuesta (OKPacket) no obtendremos 404. Si "rompemos" la tabla dará error en el catch y si
-        los datos son duplicados, también saldrá por el catch... dbResponse en este caso será un objeto en vez de array, existirá y tendrá length*/
+        /*dada la naturaleza de la respuesta (OKPacket) no obtendremos 404. Si "rompemos" la tabla dará error en el catch y si los datos son duplicados, también saldrá por el catch... dbResponse en este caso será un objeto en vez de array, existirá y tendrá length*/
 }
 
 const editOne = async(req, res, next) => {
@@ -60,4 +53,20 @@ const deleteOne = async(req, res, next) => {
     dbResponse.affectedRows ? res.status(204).end() : next()
 }
 
-module.exports = { listAll, listOne, addOne, editOne, deleteOne }
+const loginOne = async(req, res, next) => {
+    const password = await hashPassword(req.body.password)
+    const dbResponse = await loginUser(req.body.email)
+    if (await checkPassword(req.body.password, dbResponse[0].password)) {
+        const user = Object.values(JSON.parse(JSON.stringify(dbResponse)))
+        jwt.sign({ user }, "privateKey@123", { expiresIn: '1h' }, (err, token) => {
+            res.json({ token: token })
+        });
+    } else {
+        const error = {
+            status: 401,
+            message: "Unauthorized"
+        }
+        next(error)
+    }
+}
+module.exports = { listAll, listOne, addOne, editOne, deleteOne, loginOne }
