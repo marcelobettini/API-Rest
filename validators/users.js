@@ -5,14 +5,14 @@ const validatorCreateUser = [
     .exists()
     .notEmpty()
     .isLength({ min: 2, max: 30 }),
-    check("username")
-    .exists()
-    .notEmpty()
-    .isLength({ min: 3, max: 15 }),
     check("email")
     .exists()
     .notEmpty()
     .isEmail(),
+    check("password")
+    .exists()
+    .notEmpty()
+    .isLength({ min: 6, max: 30 }),
     (req, res, next) => {
         try {
             validationResult(req).throw()

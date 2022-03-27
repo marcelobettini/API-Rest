@@ -1,4 +1,6 @@
 const { getAllUsers, getUserById, addNewUser, editUserById, deleteUserById } = require("./usersModel")
+const bcrypt = require("bcrypt")
+const saltRounds = 10
 const { matchedData } = require("express-validator")
 
 const listAll = async(req, res, next) => {
@@ -19,11 +21,20 @@ const listOne = async(req, res, next) => {
 };
 
 const addOne = async(req, res, next) => {
+    const { name, email, password } = req.body
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
     console.log(req.body) //show this...
     const bodyClean = matchedData(req) //....this
     console.log(bodyClean) //...and this
-    const dbResponse = await addNewUser(bodyClean)
-    dbResponse instanceof Error ? next(dbResponse) : res.status(201).json(bodyClean)
+
+    const newUser = {
+        name,
+        email,
+        password: hashedPassword
+    }
+    const dbResponse = await addNewUser(newUser)
+    dbResponse instanceof Error ? next(dbResponse) : res.status(201).json({ message: "User created!" })
         /*dada la naturaleza de la respuesta (OKPacket) no obtendremos 404. Si "rompemos" la tabla dará error en el catch y si
         los datos son duplicados, también saldrá por el catch... dbResponse en este caso será un objeto en vez de array, existirá y tendrá length*/
 }
