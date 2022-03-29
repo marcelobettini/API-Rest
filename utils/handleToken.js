@@ -4,12 +4,10 @@
 
 function verifyToken(req, res, next) {
     const bearerHeader = req.headers['authorization']
-    console.log("Bearer Header en verifyToken:", bearerHeader)
     if (typeof bearerHeader !== 'undefined') {
         req.token = bearerHeader
-        console.log("valor de req.token en verifyToken", req.token)
         next() //pasamos al controlador (o al siguiente middleware)
-    } else { //si bearerHeader es undefined significa que no tengo tokenç
+    } else { //si bearerHeader es undefined significa que no tengo token
         res.status(403).json({ message: "Forbidden access | No Valid Token" })
     }
 }

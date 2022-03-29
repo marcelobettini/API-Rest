@@ -10,6 +10,7 @@ const notNumber = require("../utils/notNumber")
 const { hashPassword, checkPassword } = require("../utils/handlePassword");
 const { matchedData } = require("express-validator");
 const jwt = require("jsonwebtoken");
+const private_key = process.env.private_key
 
 const listAll = async(req, res, next) => {
     const dbResponse = await getAllUsers();
@@ -60,7 +61,7 @@ const loginOne = async(req, res, next) => {
     if (!dbResponse.length) return next();
     if (await checkPassword(req.body.password, dbResponse[0].password)) {
         const user = Object.values(JSON.parse(JSON.stringify(dbResponse)));
-        jwt.sign({ user }, "privateKey@123", { expiresIn: "1h" }, (err, token) => {
+        jwt.sign({ user }, private_key, { expiresIn: "1h" }, (err, token) => {
             res.json({ token: token });
         });
     } else {
