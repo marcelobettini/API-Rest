@@ -1,18 +1,20 @@
 const { check, validationResult } = require("express-validator");
 
 const validatorCreateUser = [
-    check("name").trim()
-    .exists().withMessage("Name field is required")
-    .notEmpty().withMessage("Must not be empty")
-    .isLength({ min: 2, max: 30 }).withMessage("Character count: 2 min, 30 max"),
+    check("name")
+    .exists().withMessage("Name field required")
+    .trim()
+    .isAlpha('es-ES', { ignore: ' ' }).withMessage("Only letters")
+    .isLength({ min: 2, max: 90 }).withMessage("Character count: min 2, max 90"),
     check("email")
+    .exists().withMessage("Email field required")
+    .trim()
+    .isEmail().withMessage("Must be a valid email address")
+    .normalizeEmail(),
+    check("password")
     .exists()
-    .notEmpty()
-    .isEmail(),
-    check("password").trim()
-    .exists()
-    .notEmpty()
-    .isLength({ min: 6, max: 30 }),
+    .trim()
+    .isLength({ min: 8, max: 15 }),
     (req, res, next) => {
         try {
             validationResult(req).throw()
