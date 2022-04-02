@@ -1,12 +1,24 @@
-const router = require("express").Router()
-const { validatorCreateUser } = require("../validators/users")
+const router = require("express").Router();
+const { listAll, listOne, deleteOne, editOne, register, login } = require("./usersController");
+const uploadFile = require("../utils/handleStorage");
+const { validatorCreateUser } = require("../validators/users");
 
-const { listAll, listOne, addOne, editOne, deleteOne, loginOne } = require("./usersController")
+//get all users
 router.get("/", listAll)
-router.get("/:id", listOne)
-router.post("/", validatorCreateUser, addOne)
+
+//get user by id
+router.get("/:id", listOne);
+
+//create new users
+router.post("/register", uploadFile.single("file"), validatorCreateUser, register);
+
+//login
+router.post("/login", login)
+
+//patch user by id
 router.patch("/:id", validatorCreateUser, editOne)
-router.delete("/:id", deleteOne)
-router.post("/login", loginOne)
+
+//delete user by id
+router.delete("/:id", deleteOne);
 
 module.exports = router
