@@ -25,6 +25,7 @@ const getAllUsers = async() => {
         return await pool.query(query);
     } catch (error) {
         error.message = error.code;
+        error.status = 209
         return error;
     }
 };
