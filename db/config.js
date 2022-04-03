@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mysql = require("mysql");
 const util = require("util");
 //MacBook
 /* MAMP config for MacBookPro M1 */
@@ -19,14 +19,14 @@ const pool = mysql.createPool({
 });
 
 //check connection
-pool.getConnection((err, conn) => {
-    if (err) {
-        console.warn("No conectado", { error: err.message });
-    } else {
-        console.log("Connection to DB Ok!");
-        pool.releaseConnection(conn)
-    }
-});
+// pool.getConnection((err, conn) => {
+//     if (err) {
+//         console.warn("No conectado", { error: err.message });
+//     } else {
+//         console.log("Connection to DB Ok!");
+//         pool.releaseConnection(conn)
+//     }
+// });
 
 pool.query = util.promisify(pool.query);
 
