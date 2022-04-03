@@ -1,5 +1,5 @@
 const { getAllUsers, getUserById, registerNewUser, deleteUserById, editUserById, loginUser } = require("./usersModel")
-    // const notNumber = require("../utils/notNumber")
+const notNumber = require("../utils/notNumber")
 const { hashPassword, checkPassword } = require("../utils/handlePassword")
 const { tokenSign } = require("../utils/handleJWT")
 const public_url = process.env.public_url
