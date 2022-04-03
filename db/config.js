@@ -12,10 +12,10 @@ const util = require("util");
 // });
 
 const pool = mysql.createPool({
+    user: process.env.db_user,
     host: process.env.db_host,
     database: process.env.db_name,
-    user: process.env.db_user,
-    pass: process.env.db_pass
+    password: process.env.db_pass
 });
 
 //check connection
