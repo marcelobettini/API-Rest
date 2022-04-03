@@ -15,7 +15,7 @@ const pool = mysql.createPool({
     host: process.env.db_host,
     database: process.env.db_name,
     user: process.env.db_user,
-    // pass: process.env.db_pass
+    pass: process.env.db_pass
 });
 
 //check connection
