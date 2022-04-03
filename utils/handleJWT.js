@@ -3,7 +3,8 @@ const jwt_secret = process.env.jwt_secret
     //crea el token
     //recibe el objeto "usuario" (name, password, etc)
 const tokenSign = async(user) => {
-    const sign = jwt.sign({ name: user.name, email: user.email }, jwt_secret, { expiresIn: '1h' })
+    console.log(user)
+    const sign = jwt.sign({ id: user.id, name: user.name, email: user.email, image: user.image }, jwt_secret, { expiresIn: '12h' })
     return sign
 }
 
@@ -13,9 +14,7 @@ const tokenVerify = async(tokenJWT) => {
     try {
         return jwt.verify(tokenJWT, jwt_secret)
     } catch (error) {
-        return next(error) //en caso de una explosión...
+        return error
     }
-
 }
-
 module.exports = { tokenSign, tokenVerify }
