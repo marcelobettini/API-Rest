@@ -15,7 +15,10 @@ server.use(express.urlencoded({ extended: true }));
 server.use(express.static("storage"))
 
 //Routing...
-//Users 
+server.get("/", (req, res) => {
+        res.send("Welcome...")
+    })
+    //Users 
 server.use("/users", require("./users/usersRoute"))
 
 //Posts
