@@ -1,1 +1,2 @@
-API básica con Node, Express y MySQL. Devuelve endpoints para los métodos GET, POST, PATCH y DELETE. Se puede probar con Postman. Recomendado como primera clase sobre creación de API Rest. El archivo sql.txt incluye las sentencias SQL para crear DB API, Tabla users con campos id, name, userName, email y popularla con diez usuarios iniciales.
+Github repo linked to Heroku repo. Deploy done!
+https://utn-api-mysql.herokuapp.com/
