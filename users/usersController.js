@@ -73,7 +73,7 @@ const forgot = async(req, res, next) => {
     }
     const token = await tokenSign(user, "1m")
 
-    const link = `${process.env.public_url}/${token}`
+    const link = `${process.env.public_url}/users/reset/${token}`
 
     let mailDetails = {
         from: "Tech-Support@mydomain.com",
