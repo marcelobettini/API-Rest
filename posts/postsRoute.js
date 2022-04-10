@@ -9,7 +9,7 @@ router.get("/", listAll)
     A new parameter is always marked by the question mark. We can also pass multiple params in the URL. It is important that we separate them with an & sign. But we do not need another ?.
     in address bar: /user?name=marcelobettini&mail=marce@sarasa.com&age=102&... etc key+value*/
 
-router.post("/", isAuth, addOne)
+router.post("/", isAuth, validatorCreatePost, addOne)
 
 
 module.exports = router

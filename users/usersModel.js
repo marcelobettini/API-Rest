@@ -39,7 +39,6 @@ const getUserById = async(id) => {
     }
 };
 
-
 const editUserById = async(id, user) => {
     const query = `UPDATE users SET ? WHERE id = ${id}`;
     try {
@@ -60,4 +59,14 @@ const deleteUserById = async(id) => {
     }
 };
 
-module.exports = { registerNewUser, loginUser, getUserById, deleteUserById, editUserById, getAllUsers };
+const changePasswordById = async(id, password) => {
+    const query = `UPDATE users SET password = '${password}' WHERE id = ${id}`
+    try {
+        return await pool.query(query);
+    } catch (error) {
+        error.message = error.code;
+        return error;
+    }
+}
+
+module.exports = { registerNewUser, loginUser, changePasswordById, getUserById, deleteUserById, editUserById, getAllUsers };

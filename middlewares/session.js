@@ -10,7 +10,7 @@ const isAuth = async(req, res, next) => {
         if (validToken instanceof Error) {
             return next(error)
         }
-        req.user = validToken
+        req.token = validToken
         next()
     } catch (error) {
         error.status = 401
