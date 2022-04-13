@@ -1,38 +1,35 @@
 const pool = require("../db/config")
 
-
-const getAllPosts = async() => {
-    const query = "SELECT * FROM posts"
-    try {
-        return await pool.query(query)
-    } catch (error) {
-        error.status = 500
-        error.message = error.code
-        return error
-    }
-}
-
-const getPostsWith = async(string) => {
-    const query = `SELECT * FROM posts WHERE title LIKE '%${string}%'`
-    try {
-        return await pool.query(query)
-    } catch (error) {
-        error.status = 500
-        error.message = error.code
-        return error
-    }
-}
-
-const addNewPost = async(post) => {
+const addNewPost = (post) => {
     const query = "INSERT INTO posts SET ?";
     try {
-        return await pool.query(query, post)
+        return pool.query(query, post)
     } catch (error) {
-        error.status = 500
+        error.message = error.code
+        return error
+    }
+}
+
+const getAllPosts = () => {
+    const query = "SELECT * FROM posts"
+    try {
+        return pool.query(query)
+    } catch (error) {
+
+        error.message = error.code
+        return error
+    }
+}
+
+const getPostsWith = (string) => {
+    const query = `SELECT * FROM posts WHERE title LIKE '%${string}%'`
+    try {
+        return pool.query(query)
+    } catch (error) {
         error.message = error.code
         return error
     }
 }
 
 
-module.exports = { getAllPosts, getPostsWith, addNewPost }
+module.exports = { addNewPost, getAllPosts, getPostsWith }

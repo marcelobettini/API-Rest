@@ -9,7 +9,7 @@ const { matchedData } = require("express-validator")
 //REGISTER
 const register = async(req, res, next) => {
     const urlFile = `${public_url}/${req.file.filename}`
-    const password = await hashPassword(req.body.password);
+    const password = hashPassword(req.body.password);
 
     const bodyClean = matchedData(req); //....this
 
@@ -95,15 +95,15 @@ const forgot = async(req, res, next) => {
 
 //FORM ->  RESET PASSWORD
 const reset = async(req, res, next) => {
-    const { token } = req.params
-    const tokenStatus = await tokenVerify(token)
-    if (tokenStatus instanceof Error) {
-        res.send(tokenStatus)
-    } else {
-        res.render("reset", { tokenStatus, token })
+        const { token } = req.params
+        const tokenStatus = await tokenVerify(token)
+        if (tokenStatus instanceof Error) {
+            res.send(tokenStatus)
+        } else {
+            res.render("reset", { tokenStatus, token })
+        }
     }
-}
-
+    //Saves the new password
 const saveNewPass = async(req, res, next) => {
     const { token } = req.params
     const tokenStatus = await tokenVerify(token)

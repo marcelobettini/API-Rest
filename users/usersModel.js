@@ -1,68 +1,68 @@
 const pool = require("../db/config");
 
-const registerNewUser = async(user) => {
+const registerNewUser = (user) => {
     const query = "INSERT INTO users SET ?";
     try {
-        return await pool.query(query, user);
+        return pool.query(query, user);
     } catch (error) {
         error.message = error.code;
         return error;
     }
 };
 
-const loginUser = async(email) => {
+const loginUser = (email) => {
     const query = `SELECT * FROM users WHERE email = '${email}' LIMIT 1`;
     try {
-        return await pool.query(query);
+        return pool.query(query);
     } catch (error) {
         error.message = error.code;
         return error;
     }
 };
-const getAllUsers = async() => {
+const getAllUsers = () => {
     const query = "SELECT * FROM users";
     try {
-        return await pool.query(query);
+        return pool.query(query);
     } catch (error) {
         error.message = error.code;
         return error;
     }
 };
 
-const getUserById = async(id) => {
+const getUserById = (id) => {
     const query = `SELECT * FROM users WHERE id = ${id}`;
     try {
-        return await pool.query(query);
+        return pool.query(query);
     } catch (error) {
         error.message = error.code;
         return error;
     }
 };
 
-const editUserById = async(id, user) => {
+const editUserById = (id, user) => {
     const query = `UPDATE users SET ? WHERE id = ${id}`;
     try {
-        return await pool.query(query, user);
+        return pool.query(query, user);
     } catch (error) {
         error.message = error.code;
         return error;
     }
 };
 
-const deleteUserById = async(id) => {
+const deleteUserById = (id) => {
     const query = `DELETE FROM users WHERE id = ${id}`;
     try {
-        return await pool.query(query);
+        return pool.query(query);
     } catch (error) {
         error.message = error.code;
         return error;
     }
 };
 
-const changePasswordById = async(id, password) => {
+const changePasswordById = (id, password) => {
     const query = `UPDATE users SET password = '${password}' WHERE id = ${id}`
     try {
-        return await pool.query(query);
+        return pool.query(query);
     } catch (error) {
         error.message = error.code;
         return error;

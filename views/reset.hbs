@@ -2,7 +2,6 @@
     <div class="row justify-content-center">
         <h2 class="text-center my-5">Password Recovery</h2>
         <div class="col-10 col-lg-5">
-
             <form class="border border-dark rounded p-4" action="/users/reset/{{token}}" method="post">
                 <input type="text" value='{{tokenStatus.name}}' autocomplete="username" hidden>
                 <input class="form-control mt-3" type="password" maxlength="15" placeholder="Type new password"
