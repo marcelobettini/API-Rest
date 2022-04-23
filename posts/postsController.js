@@ -3,7 +3,7 @@ const { matchedData } = require("express-validator");
 
 // https://www.samanthaming.com/tidbits/94-how-to-check-if-object-is-empty/
 //if (Object.keys(req.query).length === 0 && req.query.constructor === Object)
-const listAll = async(req, res, next) => {
+const listAll = async (req, res, next) => {
     let dbResponse = null
     if (req.query.title) {
         dbResponse = await getPostsWith(req.query.title)
@@ -14,7 +14,7 @@ const listAll = async(req, res, next) => {
     dbResponse.length ? res.status(200).json(dbResponse) : next()
 }
 
-const addOne = async(req, res, next) => {
+const addOne = async (req, res, next) => {
     const cleanBody = matchedData(req)
     const dbResponse = await addNewPost({
         userid: req.token.id,

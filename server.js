@@ -22,14 +22,16 @@ server.use(express.static("storage"))
 //Handlebars
 server.set("view engine", "hbs");
 server.set("views", "./views"); //path.join(__dirname, "views")
-
 server.engine("hbs", hbs.engine({ extname: "hbs" }))
 
 //Routing...
+//Welcome
 server.get("/", (req, res) => {
-        res.send("Welcome...")
-    })
-    //Users 
+    res.send("Welcome...")
+})
+//Auth
+server.use("/auth", require("./usersAuth/usersAuthRoute"))
+//Users 
 server.use("/users", require("./users/usersRoute"))
 
 //Posts

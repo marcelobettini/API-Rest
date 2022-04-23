@@ -58,15 +58,4 @@ const deleteUserById = (id) => {
         return error;
     }
 };
-
-const changePasswordById = (id, password) => {
-    const query = `UPDATE users SET password = '${password}' WHERE id = ${id}`
-    try {
-        return pool.query(query);
-    } catch (error) {
-        error.message = error.code;
-        return error;
-    }
-}
-
-module.exports = { registerNewUser, loginUser, changePasswordById, getUserById, deleteUserById, editUserById, getAllUsers };
+module.exports = { registerNewUser, loginUser, getUserById, deleteUserById, editUserById, getAllUsers };
