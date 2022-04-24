@@ -5,7 +5,7 @@ const hbs = require("express-handlebars")
 const path = require("path")
 require("dotenv").config()
 require("./db/config");
-const { validatePost } = require("./validators/users")
+const cookieParser = require("cookie-parser")
 
 const cors = require("cors");
 
@@ -14,10 +14,11 @@ const PORT = process.env.PORT || 3000;
 const server = express();
 server.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')))
 server.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')))
+server.use(express.static("storage"))
 server.use(cors());
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
-server.use(express.static("storage"))
+server.use(cookieParser())
 
 //Handlebars
 server.set("view engine", "hbs");
