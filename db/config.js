@@ -2,21 +2,21 @@ const mysql = require("mysql");
 const util = require("util");
 //MacBook
 /* MAMP config for MacBookPro M1 */
-const pool = mysql.createPool({
-  host: process.env.db_host,
-  database: process.env.db_name,
-  user: process.env.db_user,
-  password: process.env.DB_PASS_MAC,
-  socketPath: process.env.DB_SOCKET,
-  port: process.env.DB_PORT,
-});
-
 // const pool = mysql.createPool({
-//     user: process.env.db_user,
-//     host: process.env.db_host,
-//     database: process.env.db_name,
-//     password: process.env.db_pass
+//   host: process.env.db_host,
+//   database: process.env.db_name,
+//   user: process.env.db_user,
+//   password: process.env.DB_PASS_MAC,
+//   socketPath: process.env.DB_SOCKET,
+//   port: process.env.DB_PORT,
 // });
+
+const pool = mysql.createPool({
+    user: process.env.db_user,
+    host: process.env.db_host,
+    database: process.env.db_name,
+    password: process.env.db_pass
+});
 
 // check connection
 pool.getConnection((err, conn) => {

@@ -78,7 +78,7 @@ let mailTransporter = nodemailer.createTransport({
 
 //FORGOT
 const forgot = async (req, res, next) => {
-  const dbResponse = await loginUser(req.body.email);
+  const dbResponse = await loginUser(req.body.email);  
   if (!dbResponse.length) return next();
   const user = {
     id: dbResponse[0].id,
@@ -87,7 +87,10 @@ const forgot = async (req, res, next) => {
   };
   const token = await tokenSign(user, "15m");
 
-  const link = `${process.env.public_url}/users/reset/${token}`;
+  const link = `${process.env.public_url}/auth/reset/${token}`;
+  console.log(user)
+  console.log(token)
+  console.log(link)
 
   const mailDetails = {
     from: "Tech-Support@mydomain.com",
