@@ -1,30 +1,84 @@
 <section class="mt-5 container">
-    <div class="row justify-content-center">
-        <h2 class="text-center my-5">Password Recovery</h2>
-        <div class="col-10 col-lg-5">
-            <form class="border border-dark rounded p-4" action="/users/reset/{{token}}" method="post">
-                <input type="text" value='{{tokenStatus.name}}' autocomplete="username" hidden>
-                <input class="form-control mt-3" type="password" maxlength="15" placeholder="Type new password"
-                    autocomplete="new-password" name="password_1" autofocus>
-                <div id="passwordHelpBlock" class="form-text mb-4">
-                    Your password must be 8-15 characters long.
-                </div>
-
-                <input class="form-control" type="password" maxlength="15" placeholder="Repeat new password"
-                    autocomplete="new-password" name="password_2">
-                <div id="repeatPasswordHelpBlock" class="form-text mb-5">
-                    Both passwords must be identical.
-                </div>
-                {{#each arrWarnings}}
-                <div class="alert alert-danger" role="alert">
-                    {{msg}}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                {{/each}}
-                <div class="d-flex justify-content-center">
-                    <input type="submit" class="btn btn-success" value="send new password">
-                </div>
-            </form>
+  <div class="row justify-content-center">
+    <h2 class="text-center my-5">Password Recovery</h2>
+    <div class="col-10 col-lg-5">
+      <form
+        class="border border-dark rounded p-4"
+        action="/users/reset/{{token}}"
+        method="post"
+      >
+        <input
+          type="text"
+          value="{{tokenStatus.name}}"
+          autocomplete="username"
+          hidden
+        />
+        <div class="input-group mt-3">
+        <input
+          class="form-control"
+          type="password"
+          maxlength="15"
+          placeholder="Type new password"
+          autocomplete="new-password"
+          name="password_1"
+          id="password_1"
+          autofocus
+        /><i id="btnPassword_1" class="btn btn-outline-secondary bi bi-eye-slash-fill"></i>
         </div>
+        <div id="passwordHelpBlock" class="form-text mb-4">
+          Your password must be 8-15 characters long.
+        </div>
+        <div class="input-group">
+          <input
+            class="form-control"
+            type="password"
+            maxlength="15"
+            placeholder="Repeat new password"
+            autocomplete="new-password"
+            name="password_2"
+            id="password_2"
+          />
+          <i id="btnPassword_2" class="btn btn-outline-secondary bi bi-eye-slash-fill"></i>
+        </div>
+        <div id="repeatPasswordHelpBlock" class="form-text mb-5">
+          Both passwords must be identical.
+        </div>
+        {{#each arrWarnings}}
+          <div class="alert alert-danger" role="alert">
+            {{msg}}
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+        {{/each}}
+        <div class="d-flex justify-content-center">
+          <input
+            type="submit"
+            class="btn btn-success"
+            value="send new password"
+          />
+        </div>
+      </form>
     </div>
+  </div>
 </section>
+	<script>	
+		const password_1 = document.getElementById('password_1');
+const btnPassword_1 = document.getElementById("btnPassword_1")
+		btnPassword_1.addEventListener('click', () => {
+//todo: cambiar el ojito, hacer el pass_2
+			// Toggle the type attribute using
+			// getAttribure() method
+			const type = password_1
+				.getAttribute('type') === 'password' ?
+				'text' : 'password';
+				
+			password_1.setAttribute('type', type);
+
+			// Toggle the eye and bi-eye icon
+			this.classList.toggle('bi-eye');
+		});
+	</script>
