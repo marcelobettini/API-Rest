@@ -22,14 +22,17 @@ const listOne = async (req, res, next) => {
     if (notNumber(+req.params.id, next)) return
     const dbResponse = await getUserById(+req.params.id);
     if (dbResponse instanceof Error) return next(dbResponse);
-    const { id, name, email, image } = dbResponse[0]
-    const filtered = {
-        id,
-        name,
-        email,
-        image
+    if (dbResponse.length) {
+        const { id, name, email, image } = dbResponse[0]
+        const filtered = {
+            id,
+            name,
+            email,
+            image
+        }
+        res.status(200).json(filtered)
     }
-    dbResponse.length ? res.status(200).json(filtered) : next();
+    next();
 };
 const editOne = async (req, res, next) => {
     if (notNumber(+req.params.id, next)) return

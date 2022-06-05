@@ -9,7 +9,7 @@ const cookieParser = require("cookie-parser")
 
 const cors = require("cors");
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3030;
 
 const server = express();
 server.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')))
@@ -30,8 +30,9 @@ server.engine("hbs", hbs.engine({ extname: "hbs" }))
 server.get("/", (req, res) => {
     res.send("Welcome...")
 })
+server.get('/favicon.ico', (req, res) => res.status(204)); //check this...
 //Auth
-server.use("/auth", require("./usersAuth/usersAuthRoute"))
+server.use("/auth", require("./auth/authRoute"))
 //Users 
 server.use("/users", require("./users/usersRoute"))
 

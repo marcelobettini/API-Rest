@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const uploadFile = require("../utils/handleStorage");
 const { validatorCreateUser, validatorResetPassword } = require("../validators/users");
-const { register, login, forgot, reset, saveNewPass } = require("./usersAuthController")
+const { register, login, forgot, reset, saveNewPass } = require("./authController")
 
 //register new users
 router.post("/register", uploadFile.single("file"), validatorCreateUser, register)

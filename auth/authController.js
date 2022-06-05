@@ -35,7 +35,8 @@ const login = async (req, res, next) => {
         }
         const token = await tokenSign(user, "30m")
         const refresh = await tokenSign(user, "1y")
-        res.status(201).json({ message: "User created!", Refresh_Token: refresh, Access_Token: token });
+        res.cookie("username", "Cookie") //todo
+            .status(201).json({ message: `User ${user.name} logged in!`, Refresh_Token: refresh, Access_Token: token });
     } else {
         const error = {
             status: 401,
